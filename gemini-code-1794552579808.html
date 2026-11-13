@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>🌸 我的可愛生活手帳</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-cream: #FFFDF7;
+      --card-white: #FFFFFF;
+      --pink-main: #FF8BA7;
+      --pink-light: #FFE5EC;
+      --pink-dark: #D6456B;
+      --blue-main: #64B5F6;
+      --blue-light: #E3F2FD;
+      --blue-dark: #1E88E5;
+      --green-save: #6BCB77;
+      --green-dark: #4D9E57;
+      --yellow-accent: #FFD166;
+      --text-brown: #594A4E;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Zen Maru Gothic', 'Microsoft JhengHei', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      background-image: radial-gradient(#FFD166 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--text-brown);
+      margin: 0;
+      padding: 20px 15px;
+    }
+
+    .wrapper {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      color: var(--pink-dark);
+      margin: 0;
+      text-shadow: 2px 2px 0px #FFE5EC;
+    }
+
+    #loading {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: var(--yellow-accent);
+      color: var(--text-brown);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 999;
+    }
+
+    /* ================= 密碼鎖定畫面 ================= */
+    #login-view {
+      max-width: 400px;
+      margin: 40px auto;
+      background: var(--card-white);
+      border-radius: 28px;
+      padding: 32px 24px;
+      text-align: center;
+      border: 3px solid var(--pink-light);
+      box-shadow: 0 10px 25px rgba(255, 139, 167, 0.2);
+    }
+
+    .lock-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    #login-view h2 {
+      color: var(--pink-dark);
+      margin: 0 0 8px 0;
+      font-size: 22px;
+    }
+
+    #login-view p {
+      color: #8D7B80;
+      font-size: 14px;
+      margin: 0 0 20px 0;
+    }
+
+    .pwd-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--pink-light);
+      border-radius: 18px;
+      font-size: 18px;
+      text-align: center;
+      outline: none;
+      margin-bottom: 15px;
+      letter-spacing: 3px;
+    }
+
+    .pwd-input:focus {
+      border-color: var(--pink-main);
+    }
+
+    .unlock-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--pink-main);
+      color: white;
+      border: none;
+      border-radius: 18px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--pink-dark);
+      transition: 0.2s;
+    }
+
+    .unlock-btn:active {
+      transform: translateY(3px);
+      box-shadow: none;
+    }
+
+    #login-error {
+      color: #E74C3C;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* ================= 頁面 1：月曆主畫面 ================= */
+    #calendar-view {
+      display: none;
+    }
+
+    .calendar-card {
+      background: var(--card-white);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 8px 20px rgba(255, 139, 167, 0.15);
+      border: 3px solid var(--pink-light);
+    }
+
+    .cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .cal-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--text-brown);
+    }
+
+    .nav-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background: var(--pink-light);
+      border: none;
+      color: var(--pink-dark);
+      padding: 8px 14px;
+      border-radius: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: var(--pink-main);
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .lock-now-btn {
+      background: #F3E5AB;
+      color: var(--text-brown);
+    }
+
+    .hint-text {
+      text-align: center;
+      color: #8D7B80;
+      font-size: 14px;
+      margin-bottom: 15px;
+      background: #FFF9FA;
+      padding: 8px;
+      border-radius: 12px;
+    }
+
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #8D7B80;
+    }
+
+    .weekdays div:first-child { color: #FF6B6B; }
+    .weekdays div:last-child { color: #4ECDC4; }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    button.day-cell {
+      width: 100%;
+      min-height: 62px;
+      border-radius: 18px;
+      background: #FFF9FA;
+      color: var(--text-brown);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 2px solid #FFE5EC;
+      transition: 0.15s;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 6px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button.day-cell:hover {
+      background: var(--pink-main);
+      color: white;
+      border-color: var(--pink-main);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(255, 139, 167, 0.35);
+    }
+
+    .day-empty { min-height: 62px; }
+
+    button.day-cell.today {
+      border: 2px dashed #F4A261;
+      background: #FFFDF0;
+    }
+
+    .dots {
+      display: flex;
+      gap: 5px;
+      margin-top: 5px;
+      height: 7px;
+      pointer-events: none;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .dot.imp { background-color: var(--pink-dark); }
+    .dot.tri { background-color: var(--blue-main); }
+    button.day-cell:hover .dot.imp { background-color: #FFF; }
+    button.day-cell:hover .dot.tri { background-color: #FFE5EC; }
+
+    /* ================= 頁面 2：當日記事編輯畫面 ================= */
+    #editor-view {
+      display: none;
+    }
+
+    .editor-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--yellow-accent);
+      padding: 12px 20px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 0px #E6B84C;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .selected-date-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--text-brown);
+    }
+
+    .back-btn {
+      background: white;
+      border: none;
+      color: var(--text-brown);
+      padding: 8px 14px;
+      border-radius: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .tasks-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .task-box {
+      flex: 1;
+      min-width: 300px;
+      background: var(--card-white);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    }
+
+    .imp-box { border: 3px solid var(--pink-light); }
+    .tri-box { border: 3px solid var(--blue-light); }
+
+    .task-box h2 { margin-top: 0; font-size: 20px; }
+    .imp-box h2 { color: var(--pink-dark); }
+    .tri-box h2 { color: var(--blue-dark); }
+
+    .quick-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .tag-btn {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .imp-box .tag-btn { background: var(--pink-light); color: var(--pink-dark); }
+    .imp-box .tag-btn:hover { background: var(--pink-main); color: white; }
+
+    .tri-box .tag-btn { background: var(--blue-light); color: var(--blue-dark); }
+    .tri-box .tag-btn:hover { background: var(--blue-main); color: white; }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid #EEE;
+      border-radius: 16px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .add-btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 16px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .imp-box .add-btn { background: var(--pink-main); }
+    .tri-box .add-btn { background: var(--blue-main); }
+
+    ul { list-style: none; padding: 0; margin: 0; }
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      border-radius: 14px;
+    }
+
+    .imp-box li { background: #FFF9FA; }
+    .tri-box li { background: #F7FBFF; }
+
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .task-left input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--pink-main);
+    }
+    .tri-box .task-left input[type="checkbox"] { accent-color: var(--blue-main); }
+
+    .completed span {
+      text-decoration: line-through;
+      color: #B0A8AA;
+    }
+
+    .del-btn {
+      background: none;
+      border: none;
+      color: #CCC;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .del-btn:hover { color: var(--pink-dark); }
+
+    .empty-msg {
+      text-align: center;
+      color: #B0A8AA;
+      font-size: 14px;
+      padding: 15px 0;
+    }
+
+    .save-footer {
+      text-align: center;
+      margin-top: 10px;
+      padding-bottom: 30px;
+    }
+
+    .save-all-btn {
+      background: var(--green-save);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 19px;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 5px 0 var(--green-dark);
+      transition: 0.2s;
+    }
+
+    .save-all-btn:active {
+      transform: translateY(3px);
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="loading">🐰 正在同步資料...</div>
+
+<div class="wrapper">
+  <header>
+    <h1>🍓 我的可愛生活手帳 🧸</h1>
+  </header>
+
+  <!-- ================= 密碼鎖定畫面 ================= -->
+  <div id="login-view">
+    <div class="lock-icon">🔐</div>
+    <h2>手帳已上鎖</h2>
+    <p>請輸入專屬密碼才能查看與編輯喔！</p>
+    <input type="password" id="password-input" class="pwd-input" placeholder="請輸入密碼" onkeypress="if(event.key==='Enter') unlockDiary()">
+    <button type="button" class="unlock-btn" onclick="unlockDiary()">✨ 解鎖打開手帳</button>
+    <div id="login-error">❌ 密碼不對喔，請再試一次！</div>
+  </div>
+
+  <!-- ================= 頁面 1：月曆主畫面 ================= -->
+  <div id="calendar-view">
+    <div class="calendar-card">
+      <div class="cal-header">
+        <div class="cal-title" id="month-year-display">2026年 11月</div>
+        <div class="nav-btns">
+          <button type="button" class="nav-btn" onclick="changeMonth(-1)">◀ 上個月</button>
+          <button type="button" class="nav-btn" onclick="goToday()">⭐ 本月</button>
+          <button type="button" class="nav-btn" onclick="changeMonth(1)">下個月 ▶</button>
+          <button type="button" class="nav-btn lock-now-btn" onclick="lockDiary()">🔒 鎖定</button>
+        </div>
+      </div>
+
+      <div class="hint-text">✨ 點選日曆上的任何一天，開始記錄今天的生活吧！</div>
+
+      <div class="weekdays">
+        <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+      </div>
+      <div class="days-grid" id="calendar-days"></div>
+    </div>
+  </div>
+
+  <!-- ================= 頁面 2：當日記事編輯畫面 ================= -->
+  <div id="editor-view">
+    <div class="editor-top-bar">
+      <div class="selected-date-title" id="selected-date-label">📅 2026年 11月 13日 (星期五)</div>
+      <button type="button" class="back-btn" onclick="cancelAndBack()">↩ 不儲存返回月曆</button>
+    </div>
+
+    <div class="tasks-container">
+      <div class="task-box imp-box">
+        <h2>💖 重要事情 (必須做)</h2>
+        <div class="quick-tags">
+          <button type="button" class="tag-btn" onclick="addLocalTask('important', '上學')">🎒 上學</button>
+          <button type="button" class="tag-btn" onclick="addLocalTask('important', '補習班')">✏️ 補習班</button>
+          <button type="button" class="tag-btn" onclick="addLocalTask('important', '吃飯')">🍙 吃飯</button>
+          <button type="button" class="tag-btn" onclick="addLocalTask('important', '寫功課')">📖 寫功課</button>
+          <button type="button" class="tag-btn" onclick="addLocalTask('important', '複習')">💡 複習</button>
+          <button type="button" class="tag-btn" onclick="addLocalTask('important', '預習')">🔍 預習</button>
+        </div>
+        <div class="input-group">
+          <input type="text" id="imp-input" placeholder="輸入其他必須做的事..." onkeypress="handleEnter(event, 'important')">
+          <button type="button" class="add-btn" onclick="handleManualAdd('important')">加入</button>
+        </div>
+        <ul id="important-list"></ul>
+      </div>
+
+      <div class="task-box tri-box">
+        <h2>🎈 零碎小事 (不一定)</h2>
+        <div class="quick-tags">
+          <button type="button" class="tag-btn" onclick="addLocalTask('trivial', '看電視')">📺 看電視</button>
+          <button type="button" class="tag-btn" onclick="addLocalTask('trivial', '玩3C')">🎮 玩3C</button>
+          <button type="button" class="tag-btn" onclick="addLocalTask('trivial', '玩桌遊')">🎲 玩桌遊</button>
+        </div>
+        <div class="input-group">
+          <input type="text" id="tri-input" placeholder="輸入其他休閒小事..." onkeypress="handleEnter(event, 'trivial')">
+          <button type="button" class="add-btn" onclick="handleManualAdd('trivial')">加入</button>
+        </div>
+        <ul id="trivial-list"></ul>
+      </div>
+    </div>
+
+    <div class="save-footer">
+      <button type="button" class="save-all-btn" onclick="saveAndReturn()">💾 儲存並回到月曆</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ★ 請在這裡貼上你的 GAS 網頁應用程式網址（結尾是 /exec）
+  const GAS_API_URL = "https://script.google.com/macros/s/你的專屬ID/exec";
+
+  let userPassword = ""; // 暫存在記憶體中的密碼（關閉分頁即自動清除）
+  let allTasks = [];
+  let draftDayTasks = [];
+  let currentDate = new Date();
+  let selectedDateStr = '';
+
+  const weekNames = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+
+  // 解鎖驗證
+  function unlockDiary() {
+    const inputPwd = document.getElementById('password-input').value.trim();
+    if (!inputPwd) return;
+
+    document.getElementById('login-error').style.display = 'none';
+    showLoading(true, '🔑 正在核對密碼...');
+
+    fetch(`${GAS_API_URL}?pwd=${encodeURIComponent(inputPwd)}`)
+      .then(response => response.json())
+      .then(result => {
+        showLoading(false);
+        if (result.status === 'success') {
+          userPassword = inputPwd;
+          allTasks = result.tasks || [];
+          document.getElementById('password-input').value = '';
+          document.getElementById('login-view').style.display = 'none';
+          document.getElementById('calendar-view').style.display = 'block';
+          renderCalendar();
+        } else {
+          document.getElementById('login-error').style.display = 'block';
+        }
+      })
+      .catch(err => {
+        showLoading(false);
+        alert('連線失敗，請檢查網路或 GAS 網址是否正確！');
+      });
+  }
+
+  // 手動一鍵上鎖
+  function lockDiary() {
+    userPassword = "";
+    allTasks = [];
+    document.getElementById('calendar-view').style.display = 'none';
+    document.getElementById('editor-view').style.display = 'none';
+    document.getElementById('login-view').style.display = 'block';
+  }
+
+  function showLoading(show, text) {
+    const el = document.getElementById('loading');
+    if (text) el.innerText = text;
+    el.style.display = show ? 'block' : 'none';
+  }
+
+  function formatDate(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  function changeMonth(offset) {
+    currentDate.setDate(1);
+    currentDate.setMonth(currentDate.getMonth() + offset);
+    renderCalendar();
+  }
+
+  function goToday() {
+    currentDate = new Date();
+    renderCalendar();
+  }
+
+  function renderCalendar() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    document.getElementById('month-year-display').innerText = `🗓️ ${year}年 ${month + 1}月`;
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const todayStr = formatDate(new Date());
+
+    const grid = document.getElementById('calendar-days');
+    grid.innerHTML = '';
+
+    for (let i = 0; i < firstDay; i++) {
+      const emptyCell = document.createElement('div');
+      emptyCell.className = 'day-empty';
+      grid.appendChild(emptyCell);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'day-cell';
+      if (dateStr === todayStr) btn.classList.add('today');
+
+      const dayTasks = allTasks.filter(t => t.date === dateStr);
+      const hasImp = dayTasks.some(t => t.category === 'important');
+      const hasTri = dayTasks.some(t => t.category === 'trivial');
+
+      let dotsHtml = '<div class="dots">';
+      if (hasImp) dotsHtml += '<span class="dot imp"></span>';
+      if (hasTri) dotsHtml += '<span class="dot tri"></span>';
+      dotsHtml += '</div>';
+
+      btn.innerHTML = `<span style="pointer-events:none;">${day}</span>${dotsHtml}`;
+      btn.addEventListener('click', function() {
+        openDayEditor(dateStr);
+      });
+      grid.appendChild(btn);
+    }
+  }
+
+  function openDayEditor(dateStr) {
+    selectedDateStr = dateStr;
+    draftDayTasks = JSON.parse(JSON.stringify(allTasks.filter(t => t.date === dateStr)));
+
+    const parts = dateStr.split('-');
+    const dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    const dayOfWeek = weekNames[dateObj.getDay()];
+    document.getElementById('selected-date-label').innerText = 
+      `📅 ${parts[0]}年 ${parseInt(parts[1])}月 ${parseInt(parts[2])}日 (${dayOfWeek})`;
+
+    renderDraftTasks();
+
+    document.getElementById('calendar-view').style.display = 'none';
+    document.getElementById('editor-view').style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  function addLocalTask(category, title) {
+    const newTask = {
+      id: new Date().getTime().toString() + Math.floor(Math.random() * 100),
+      date: selectedDateStr,
+      category: category,
+      title: title,
+      completed: false
+    };
+    draftDayTasks.push(newTask);
+    renderDraftTasks();
+  }
+
+  function handleManualAdd(category) {
+    const inputId = category === 'important' ? 'imp-input' : 'tri-input';
+    const inputEl = document.getElementById(inputId);
+    const title = inputEl.value.trim();
+    if (!title) return;
+    
+    inputEl.value = '';
+    addLocalTask(category, title);
+  }
+
+  function handleEnter(e, category) {
+    if (e.key === 'Enter') handleManualAdd(category);
+  }
+
+  function toggleLocalTask(id) {
+    const task = draftDayTasks.find(t => t.id === id);
+    if (task) {
+      task.completed = !task.completed;
+      renderDraftTasks();
+    }
+  }
+
+  function deleteLocalTask(id) {
+    draftDayTasks = draftDayTasks.filter(t => t.id !== id);
+    renderDraftTasks();
+  }
+
+  function renderDraftTasks() {
+    const impList = document.getElementById('important-list');
+    const triList = document.getElementById('trivial-list');
+    impList.innerHTML = '';
+    triList.innerHTML = '';
+
+    const impTasks = draftDayTasks.filter(t => t.category === 'important');
+    const triTasks = draftDayTasks.filter(t => t.category === 'trivial');
+
+    if (impTasks.length === 0) {
+      impList.innerHTML = '<div class="empty-msg">點上方按鈕或輸入新增事項吧～ ✨</div>';
+    } else {
+      impTasks.forEach(task => impList.appendChild(createTaskElement(task)));
+    }
+
+    if (triTasks.length === 0) {
+      triList.innerHTML = '<div class="empty-msg">今天做了什麼放鬆小事呢？ 🍀</div>';
+    } else {
+      triTasks.forEach(task => triList.appendChild(createTaskElement(task)));
+    }
+  }
+
+  function createTaskElement(task) {
+    const li = document.createElement('li');
+    if (task.completed) li.classList.add('completed');
+    li.innerHTML = `
+      <div class="task-left" onclick="toggleLocalTask('${task.id}')">
+        <input type="checkbox" ${task.completed ? 'checked' : ''}>
+        <span>${escapeHtml(task.title)}</span>
+      </div>
+      <button type="button" class="del-btn" title="移除" onclick="deleteLocalTask('${task.id}')">✖</button>
+    `;
+    return li;
+  }
+
+  // 儲存時一併帶上密碼驗證
+  function saveAndReturn() {
+    showLoading(true, '💾 正在儲存到日曆中...');
+    
+    fetch(GAS_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify({
+        pwd: userPassword,
+        dateStr: selectedDateStr,
+        dayTasks: draftDayTasks
+      })
+    })
+    .then(response => response.json())
+    .then(result => {
+      showLoading(false);
+      if (result.status === 'success') {
+        allTasks = result.tasks || [];
+        document.getElementById('editor-view').style.display = 'none';
+        document.getElementById('calendar-view').style.display = 'block';
+        renderCalendar();
+      } else {
+        alert('儲存失敗：' + result.message);
+      }
+    })
+    .catch(err => {
+      showLoading(false);
+      alert('連線錯誤，請檢查網路：' + err);
+    });
+  }
+
+  function cancelAndBack() {
+    document.getElementById('editor-view').style.display = 'none';
+    document.getElementById('calendar-view').style.display = 'block';
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+</script>
+
+</body>
+</html>
